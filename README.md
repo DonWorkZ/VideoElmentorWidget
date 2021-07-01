@@ -27,3 +27,5 @@
 ##### Skype: live:.cid.988eb89c384e61a2
 
 
+#### Google Link
+https://docs.google.com/document/d/1Cm55KzRbYmt_TAKTw_AmqJDMzJyom7rlESTrJiQC8r8/edit?usp=sharing
