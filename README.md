@@ -25,6 +25,7 @@
 ### Quick contact info:
 ##### Discord: mango#0947
 ##### Skype: live:.cid.988eb89c384e61a2
+##### Whatsapp: +8613009211927
 
 
 #### Google Link
