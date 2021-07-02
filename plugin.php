@@ -52,7 +52,22 @@ class Plugin
      */
     public function widget_scripts()
     {
+        wp_register_script('videojs', plugins_url('/assets/videojs/video.min.js', __FILE__), ['jquery'], false, true);
         wp_register_script('elementor-video-widget', plugins_url('/assets/js/video.js', __FILE__), ['jquery'], false, true);
+    }
+
+    /**
+     * widget_styles
+     *
+     * Load required plugin core files.
+     *
+     * @since 1.0.0
+     * @access public
+     */
+    public function widget_styles()
+    {
+        wp_register_style('videojs', plugins_url('/assets/videojs/video-js.min.css', __FILE__), [], '7.13.3', 'all');
+        wp_register_style('elementor-video-widget', plugins_url('/assets/css/video.css', __FILE__), [], '1.0.0', 'all');
     }
 
     /**
@@ -66,7 +81,15 @@ class Plugin
     public function editor_scripts()
     {
         add_filter('script_loader_tag', [$this, 'editor_scripts_as_a_module'], 10, 2);
-
+        wp_enqueue_script(
+            'videojs',
+            plugins_url('/assets/videojs/video.min.js', __FILE__),
+            [
+                'elementor-editor',
+            ],
+            '1.0.0',
+            true
+        );
         wp_enqueue_script(
             'elementor-video-widget-editor',
             plugins_url('/assets/js/editor/editor.js', __FILE__),
@@ -154,7 +177,8 @@ class Plugin
     public function __construct()
     {
 
-        // Register widget scripts
+        // Register frontend widget scripts
+        add_action('elementor/frontend/after_enqueue_styles', [$this, 'widget_styles']);
         add_action('elementor/frontend/after_register_scripts', [$this, 'widget_scripts']);
 
         // Register widgets

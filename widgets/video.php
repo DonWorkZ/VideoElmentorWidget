@@ -107,7 +107,23 @@ class Video extends Widget_Base
      */
     public function get_script_depends()
     {
-        return ['elementor-video-widget'];
+        return ['elementor-video-widget', 'videojs'];
+    }
+
+    /**
+     * Retrieve the list of scripts the widget depended on.
+     *
+     * Used to set scripts dependencies required to run the widget.
+     *
+     * @since 1.0.0
+     *
+     * @access public
+     *
+     * @return array Widget scripts dependencies.
+     */
+    public function get_style_depends()
+    {
+        return ['videojs', 'elementor-video-widget'];
     }
 
     /**
@@ -246,14 +262,11 @@ class Video extends Widget_Base
                         'max' => 100,
                     ],
                 ],
-                'selectors' => [
-                    '{{WRAPPER}} img' => 'width: {{SIZE}}{{UNIT}};',
-                ],
             ]
         );
 
         $this->add_responsive_control(
-            'space',
+            'maxwidth',
             [
                 'label' => __('Max Width', 'elementor'),
                 'type' => Controls_Manager::SLIDER,
@@ -280,9 +293,6 @@ class Video extends Widget_Base
                         'min' => 1,
                         'max' => 100,
                     ],
-                ],
-                'selectors' => [
-                    '{{WRAPPER}} img' => 'max-width: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
@@ -312,9 +322,6 @@ class Video extends Widget_Base
                         'max' => 100,
                     ],
                 ],
-                'selectors' => [
-                    '{{WRAPPER}} img' => 'height: {{SIZE}}{{UNIT}};',
-                ],
             ]
         );
 
@@ -334,9 +341,38 @@ class Video extends Widget_Base
     {
         $settings = $this->get_settings_for_display();
 
-        echo '<div class="title">';
-        echo $settings['title'];
-        echo '</div>';
+        $id = $this->get_id();
+        // echo "<div>
+        //     ID = {$settings['source']['id']}<br>
+        //     Source = {$settings['source']['url']}<br>
+        //     Autoplay = {$settings['autoplay']}<br>
+        //     Offset = {$settings['offset']['size']}{$settings['offset']['unit']}<br>
+        //     Loop = {$settings['loop']}<br>
+        //     Controls = {$settings['controls']}<br>
+        //     Width = {$settings['width']['size']}{$settings['width']['unit']}<br>
+        //     Height = {$settings['height']['size']}{$settings['height']['unit']}<br>
+        //     MaxWidth = {$settings['maxwidth']['size']}{$settings['maxwidth']['unit']}<br>
+        // </div>";
+
+
+        echo wp_sprintf(
+            '<div style="width: %s%s; max-width: %s%s">
+            <div class="video-js-responsive-container">
+                <video id="video-%s" class="video-js vjs-default-skin" controls preload="auto" muted data-setup=\'{"fluid": true}\' style="height:%s%s">
+                    <source src="%s" type=\'video/mp4\' />
+                </video>
+            </div>
+        </div>',
+            $settings['width']['size'],
+            $settings['width']['unit'],
+            $settings['maxwidth']['size'],
+            $settings['maxwidth']['unit'],
+            $this->get_id(),
+            $settings['height']['size'],
+            $settings['height']['unit'],
+            $settings['source']['url']
+
+        );
     }
 
     /**
@@ -351,9 +387,34 @@ class Video extends Widget_Base
     protected function _content_template()
     {
 ?>
-        <div class="title">
-            {{{ settings.title }}}
-        </div>
-<?php
+
+        <!-- <div>
+            ID = {{view.getID()}}<br>
+            Source = {{settings.source.url}}<br>
+            Autoplay = {{settings.autoplay}}<br>
+            Offset = {{settings.offset.size}}{{settings.offset.unit}}<br>
+            Loop = {{settings.loop}}<br>
+            Controls = {{settings.controls}}<br>
+            Width = {{settings.width.size}}{{settings.width.unit}}<br>
+            Height = {{settings.height.size}}{{settings.height.unit}}<br>
+            MaxWidth = {{settings.maxwidth.size}}{{settings.maxwidth.unit}}<br>
+
+            <# console.log(settings); #>
+        </div> -->
+
+        <# if( '' !==settings.source.url ) { #>
+
+            <div style="width: {{settings.width.size}}{{settings.width.unit}}; max-width: {{settings.maxwidth.size}}{{settings.maxwidth.unit}}">
+                <div class="video-js-responsive-container">
+                    <video id="video-{{view.getID()}}" class="video-js vjs-default-skin" controls preload="auto" muted data-setup=' {"fluid": true}' style="height:{{settings.height.size}}{{settings.height.unit}}">
+                        <source src="{{settings.source.url}}" type='video/mp4' />
+                    </video>
+                </div>
+            </div>
+
+            <# } else { #>
+                <div class="insert_video_widget">Insert a video to the widget.</div>
+                <# } #>
+            <?php
+        }
     }
-}

@@ -1,0 +1,9 @@
+.elementor-widget-video-widget video {
+    width: 100%;
+    height: 100%;
+}
+
+.insert_video_widget{
+    border: 1px solid #cc0000;
+    padding: 20px;
+}
