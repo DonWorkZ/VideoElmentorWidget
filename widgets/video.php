@@ -107,7 +107,7 @@ class Video extends Widget_Base
      */
     public function get_script_depends()
     {
-        return ['elementor-video-widget', 'videojs'];
+        return ['videojs', 'waypoints', 'elementor-video-widget'];
     }
 
     /**
@@ -156,6 +156,21 @@ class Video extends Widget_Base
                     ],
                 ],
                 'media_type' => 'video',
+            ]
+        );
+
+        $this->add_control(
+            'poster',
+            [
+                'label' => __('Video Poster', 'elementor'),
+                'type' => Controls_Manager::MEDIA,
+                'dynamic' => [
+                    'active' => true,
+                    'categories' => [
+                        TagsModule::MEDIA_CATEGORY,
+                    ],
+                ],
+                'media_type' => 'image',
             ]
         );
 
@@ -354,24 +369,33 @@ class Video extends Widget_Base
         //     MaxWidth = {$settings['maxwidth']['size']}{$settings['maxwidth']['unit']}<br>
         // </div>";
 
+        $this->add_render_attribute(
+            'wrapper',
+            [
+                'id' => "videojs-{$id}",
+                'data-offset' => $settings['offset']['size'] . $settings['offset']['unit'],
+            ]
+        );
 
         echo wp_sprintf(
-            '<div style="width: %s%s; max-width: %s%s">
+            '<div %s>
+            <div style="width: %s%s; max-width: %s%s">
             <div class="video-js-responsive-container">
-                <video id="video-%s" class="video-js vjs-default-skin" controls preload="auto" muted data-setup=\'{"fluid": true}\' style="height:%s%s">
+                <video id="video-%s" class="video-js vjs-default-skin" preload="auto" muted data-setup=\'{"fluid": true, "loop": true}\' poster="%s">
                     <source src="%s" type=\'video/mp4\' />
                 </video>
             </div>
-        </div>',
+        </div></div>',
+            $this->get_render_attribute_string('wrapper'),
             $settings['width']['size'],
             $settings['width']['unit'],
             $settings['maxwidth']['size'],
             $settings['maxwidth']['unit'],
             $this->get_id(),
-            $settings['height']['size'],
-            $settings['height']['unit'],
+            // $settings['height']['size'],
+            // $settings['height']['unit'],
+            $settings['poster']['url'],
             $settings['source']['url']
-
         );
     }
 
@@ -388,25 +412,11 @@ class Video extends Widget_Base
     {
 ?>
 
-        <!-- <div>
-            ID = {{view.getID()}}<br>
-            Source = {{settings.source.url}}<br>
-            Autoplay = {{settings.autoplay}}<br>
-            Offset = {{settings.offset.size}}{{settings.offset.unit}}<br>
-            Loop = {{settings.loop}}<br>
-            Controls = {{settings.controls}}<br>
-            Width = {{settings.width.size}}{{settings.width.unit}}<br>
-            Height = {{settings.height.size}}{{settings.height.unit}}<br>
-            MaxWidth = {{settings.maxwidth.size}}{{settings.maxwidth.unit}}<br>
-
-            <# console.log(settings); #>
-        </div> -->
-
         <# if( '' !==settings.source.url ) { #>
 
             <div style="width: {{settings.width.size}}{{settings.width.unit}}; max-width: {{settings.maxwidth.size}}{{settings.maxwidth.unit}}">
                 <div class="video-js-responsive-container">
-                    <video id="video-{{view.getID()}}" class="video-js vjs-default-skin" controls preload="auto" muted data-setup=' {"fluid": true}' style="height:{{settings.height.size}}{{settings.height.unit}}">
+                    <video id="video-{{view.getID()}}" class="video-js vjs-default-skin" controls preload="auto" muted data-setup=' {"fluid": true}' poster="{{settings.poster.url}}">
                         <source src="{{settings.source.url}}" type='video/mp4' />
                     </video>
                 </div>

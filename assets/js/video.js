@@ -4,8 +4,21 @@
 	 * @param $ The jQuery alias
 	 */ 
 	var WidgetVideoHandler = function( $scope, $ ) {
-		console.log( $scope );
-        console.log('FUCK YEAH~~~');
+
+        var vid = $scope.data('id');
+        var video = videojs.getPlayer(`video-${vid}`);
+        var offsetTop = $(`#videojs-${vid}`).data('offset');
+
+        function playVideo(){
+            video.play();
+        }
+        
+        $(`#video-${$scope.attr('data-id')}`).waypoint({
+        handler: function(direction) {
+            playVideo(vid);
+        },
+        offset: offsetTop
+        });
 	};
 	
 	// Make sure you run this code under Elementor.

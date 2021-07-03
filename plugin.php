@@ -53,6 +53,7 @@ class Plugin
     public function widget_scripts()
     {
         wp_register_script('videojs', plugins_url('/assets/videojs/video.min.js', __FILE__), ['jquery'], false, true);
+        wp_register_script('waypoints', plugins_url('/assets/js/jquery.waypoints.min.js', __FILE__), ['jquery'], '4.0.1', true);
         wp_register_script('elementor-video-widget', plugins_url('/assets/js/video.js', __FILE__), ['jquery'], false, true);
     }
 
