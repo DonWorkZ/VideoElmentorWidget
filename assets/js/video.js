@@ -6,19 +6,18 @@
 	var WidgetVideoHandler = function( $scope, $ ) {
 
         var vid = $scope.data('id');
-        var video = videojs.getPlayer(`video-${vid}`);
-        var offsetTop = $(`#videojs-${vid}`).data('offset');
+        const player = new Plyr(`video-${vid}`);
 
-        function playVideo(){
-            video.play();
-        }
+        console.log(player);
         
-        $(`#video-${$scope.attr('data-id')}`).waypoint({
-        handler: function(direction) {
-            playVideo(vid);
-        },
-        offset: offsetTop
-        });
+        player.on('timeupdate', event => {
+            console.log(event);
+        });      
+        player.on('playing', event => {
+            console.log('playing', event);
+        });    
+        
+    
 	};
 	
 	// Make sure you run this code under Elementor.

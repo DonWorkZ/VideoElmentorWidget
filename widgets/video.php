@@ -107,7 +107,7 @@ class Video extends Widget_Base
      */
     public function get_script_depends()
     {
-        return ['videojs', 'waypoints', 'elementor-video-widget'];
+        return ['plyr', 'elementor-video-widget'];
     }
 
     /**
@@ -123,7 +123,7 @@ class Video extends Widget_Base
      */
     public function get_style_depends()
     {
-        return ['videojs', 'elementor-video-widget'];
+        return ['plyr', 'elementor-video-widget'];
     }
 
     /**
@@ -160,21 +160,6 @@ class Video extends Widget_Base
         );
 
         $this->add_control(
-            'poster',
-            [
-                'label' => __('Video Poster', 'elementor'),
-                'type' => Controls_Manager::MEDIA,
-                'dynamic' => [
-                    'active' => true,
-                    'categories' => [
-                        TagsModule::MEDIA_CATEGORY,
-                    ],
-                ],
-                'media_type' => 'image',
-            ]
-        );
-
-        $this->add_control(
             'video_options',
             [
                 'label' => __('Video Options', 'elementor'),
@@ -183,60 +168,46 @@ class Video extends Widget_Base
             ]
         );
 
-        $this->add_control(
-            'autoplay',
+        $repeater = new \Elementor\Repeater();
+
+        $repeater = new \Elementor\Repeater();
+
+        $repeater->add_control(
+            'pause_title',
             [
-                'label' => __('Autoplay', 'plugin-domain'),
-                'type' => \Elementor\Controls_Manager::SWITCHER,
-                'label_on' => __('Yes', 'elementor-video-widget'),
-                'label_off' => __('No', 'elementor-video-widget'),
-                'return_value' => 'yes',
-                'default' => 'yes',
+                'label' => __('Pause Title', 'elementor-video-widget'),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'default' => __('First Pause', 'elementor-video-widget'),
+                'label_block' => true,
+            ]
+        );
+
+        $repeater->add_control(
+            'pause_time',
+            [
+                'label' => __('Pause Time', 'elementor-video-widget'),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'default' => __('5', 'elementor-video-widget'),
+                'description' => __('In Seconds', 'elementor-video-widget'),
+                'label_block' => true,
             ]
         );
 
         $this->add_control(
-            'offset',
+            'pauses',
             [
-                'label' => __('Offset', 'plugin-domain'),
-                'description' => __('When to autoplay the video? Percentage from the top of the page.', 'elementor-video-widget'),
-                'type' => Controls_Manager::SLIDER,
-                'size_units' => ['%'],
-                'range' => [
-                    '%' => [
-                        'min' => 0,
-                        'max' => 100,
+                'label' => __('Breaks', 'elementor-video-widget'),
+                'type' => \Elementor\Controls_Manager::REPEATER,
+                'fields' => $repeater->get_controls(),
+                'default' => [
+                    [
+                        'pause_title' => __('First Pause', 'elementor-video-widget'),
+                        'pause_time' => __('5', 'elementor-video-widget'),
                     ],
                 ],
-                'default' => [
-                    'unit' => '%',
-                    'size' => 50,
-                ],
-                'condition' => [
-                    'autoplay' => 'yes',
-                ],
+                'title_field' => '{{{ pause_title }}}',
             ]
         );
-
-        $this->add_control(
-            'loop',
-            [
-                'label' => __('Loop', 'elementor'),
-                'type' => Controls_Manager::SWITCHER,
-            ]
-        );
-
-        $this->add_control(
-            'controls',
-            [
-                'label' => __('Player Controls', 'elementor'),
-                'type' => Controls_Manager::SWITCHER,
-                'label_off' => __('Hide', 'elementor'),
-                'label_on' => __('Show', 'elementor'),
-                'default' => 'yes',
-            ]
-        );
-
 
         $this->end_controls_section();
 
@@ -381,7 +352,7 @@ class Video extends Widget_Base
             '<div %s>
             <div style="width: %s%s; max-width: %s%s">
             <div class="video-js-responsive-container">
-                <video id="video-%s" class="video-js vjs-default-skin" preload="auto" muted data-setup=\'{"fluid": true, "loop": true}\' poster="%s">
+                <video id="video-%s" class="video-js vjs-default-skin" autoplay preload="auto" muted data-setup=\'{"fluid": true, "loop": true}\'>
                     <source src="%s" type=\'video/mp4\' />
                 </video>
             </div>
@@ -394,7 +365,7 @@ class Video extends Widget_Base
             $this->get_id(),
             // $settings['height']['size'],
             // $settings['height']['unit'],
-            $settings['poster']['url'],
+            // $settings['poster']['url'],
             $settings['source']['url']
         );
     }
@@ -416,7 +387,7 @@ class Video extends Widget_Base
 
             <div style="width: {{settings.width.size}}{{settings.width.unit}}; max-width: {{settings.maxwidth.size}}{{settings.maxwidth.unit}}">
                 <div class="video-js-responsive-container">
-                    <video id="video-{{view.getID()}}" class="video-js vjs-default-skin" controls preload="auto" muted data-setup=' {"fluid": true}' poster="{{settings.poster.url}}">
+                    <video id="video-{{view.getID()}}" autoplay class="video-js vjs-default-skin" controls preload="auto" muted data-setup=' {"fluid": true}'>
                         <source src="{{settings.source.url}}" type='video/mp4' />
                     </video>
                 </div>
