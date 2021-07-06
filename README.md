@@ -7,7 +7,10 @@
 
   ### I need an Elementor widget that plays a MP4 video on scroll, and letting me control these properties:
   ##### ○ Choose the video file from the library
-  ##### ○ Choose the range of the page to play the video (for example: in 14% of the length of the page start the video, and end it on the 84% of the page length) - like the Lottie widget already does, see attachment.
+  ##### ○ I need to decide when the video will start playing on scroll and when it will stops.
+  ###### • It can be done by choosing the range of the page to play the video (for example: in 14% of the length of the page start the video, and end it on the 84% of the page length) - like the Lottie widget already does, see attachment.
+  ###### • It also can be done maybe by the height of it's section container. I open to suggestions.
+  ##### ○ When scrolling down, the video will play forward. when scrolling up, the video will play backwards. when not scrolling, the video will no play at all.
   ##### ○ Control the width \ height of the video.
   ##### ○ Include the regular "Advanced" widget tab in Elementor.
 
