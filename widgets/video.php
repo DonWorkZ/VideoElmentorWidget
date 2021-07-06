@@ -340,11 +340,17 @@ class Video extends Widget_Base
         //     MaxWidth = {$settings['maxwidth']['size']}{$settings['maxwidth']['unit']}<br>
         // </div>";
 
+        $brakes = [];
+        foreach ($settings['pauses'] as $brake) {
+            $brakes[] = $brake['pause_time'];
+        }
+        $brakes = implode(',', $brakes);
+
         $this->add_render_attribute(
             'wrapper',
             [
                 'id' => "videojs-{$id}",
-                'data-offset' => $settings['offset']['size'] . $settings['offset']['unit'],
+                'data-brakes' => $brakes,
             ]
         );
 
@@ -352,7 +358,7 @@ class Video extends Widget_Base
             '<div %s>
             <div style="width: %s%s; max-width: %s%s">
             <div class="video-js-responsive-container">
-                <video id="video-%s" class="video-js vjs-default-skin" autoplay preload="auto" muted data-setup=\'{"fluid": true, "loop": true}\'>
+                <video id="video-%s" class="video-js vjs-default-skin" autoplay preload="auto" muted>
                     <source src="%s" type=\'video/mp4\' />
                 </video>
             </div>
@@ -387,7 +393,7 @@ class Video extends Widget_Base
 
             <div style="width: {{settings.width.size}}{{settings.width.unit}}; max-width: {{settings.maxwidth.size}}{{settings.maxwidth.unit}}">
                 <div class="video-js-responsive-container">
-                    <video id="video-{{view.getID()}}" autoplay class="video-js vjs-default-skin" controls preload="auto" muted data-setup=' {"fluid": true}'>
+                    <video id="video-{{view.getID()}}" autoplay class="video-js vjs-default-skin" controls preload="auto" muted>
                         <source src="{{settings.source.url}}" type='video/mp4' />
                     </video>
                 </div>
