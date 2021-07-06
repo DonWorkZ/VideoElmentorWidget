@@ -9,14 +9,31 @@
         
             var vid = $scope.data('id');
             var player = new Plyr(`#video-${vid}`, {controls: false});
+            var brakes = $(`#videojs-${vid}`).data('brakes');
+            var counter = 0;
+            var playing = true;
 
-            console.log(vid, player);
-            
+            brakes = brakes.split(",");
+            var brakesLength = brakes.length;
+            var pauseAt = brakes[0];
+
             player.on('timeupdate', event => {
-                console.log(event);
-            });      
-            player.on('play', event => {
-                console.log('playing', event);
+                if( player.currentTime > pauseAt && playing == true ){
+                    playing = false;
+                    player.pause();
+                    counter++;
+                }
+            });
+
+            $(window).on('scroll', function (event) {
+                if( counter >= brakesLength ){
+                    return;
+                }
+                if( playing === false ){
+                    player.play();
+                    playing = true;
+                    pauseAt = brakes[counter];
+                }
             });
 
         });
